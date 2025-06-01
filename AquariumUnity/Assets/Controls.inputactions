@@ -1,0 +1,34 @@
+{
+    "name": "Controls",
+    "maps": [
+        {
+            "name": "ChangeView",
+            "id": "e0aa04b5-948d-41ea-8f09-5bc8521a4aaf",
+            "actions": [
+                {
+                    "name": "SwitchCamera",
+                    "type": "Button",
+                    "id": "c1b2f4a6-f140-42f1-a0cf-5e63d9c8a454",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "d4e529d1-b51d-43d1-8785-0167883fef09",
+                    "path": "<Keyboard>/space",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "SwitchCamera",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
