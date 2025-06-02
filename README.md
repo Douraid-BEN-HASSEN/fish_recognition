@@ -124,30 +124,30 @@ Caractéristiques Clés
 ### Face model
 - **Metrics** :
 
-<img src="images/face_trainingsetstats2.png" alt="Trainning metrics Face" width="15%"/>
+<img src="images/face_trainingsetstats2.png" alt="Trainning metrics Face"/>
 
 - **Courbes d'apprentissage (436 epochs)** :
 
-<img src="images/face_classifier_training_metrics.png" alt="Matrice de confusion Face" width="50%"/>
+<img src="images/face_classifier_training_metrics.png" alt="Matrice de confusion Face"/>
 
 - **Matrice de confusion** :
 
-<img src="images/face_trainingset.png" alt="Matrice de confusion Face" width="25%"/>
-<img src="images/face_trainingsetstats.png" alt="Trainning metrics Face" width="50%"/>
+<img src="images/face_trainingset.png" alt="Matrice de confusion Face"/>
+<img src="images/face_trainingsetstats.png" alt="Trainning metrics Face"/>
 
 ### Profile model
 - **Metrics** :
 
-<img src="images/profile_trainingsetstats2.png" alt="Trainning metrics Profile" width="15%"/>
+<img src="images/profile_trainingsetstats2.png" alt="Trainning metrics Profile"/>
 
 - **Courbes d'apprentissage (150 epochs)** :
 
-<img src="images/profile_classifier_training_metrics.png" alt="Matrice de confusion Face" width="50%"/>
+<img src="images/profile_classifier_training_metrics.png" alt="Matrice de confusion Face"/>
 
 - **Matrice de confusion** :
 
-<img src="images/profile_trainingset.png" alt="Matrice de confusion Profile" width="25%"/>
-<img src="images/profile_trainingsetstats.png" alt="Trainning metrics Profile" width="50%"/>
+<img src="images/profile_trainingset.png" alt="Matrice de confusion Profile"/>
+<img src="images/profile_trainingsetstats.png" alt="Trainning metrics Profile"/>
 
 
 ## 🚀 Utilisation
