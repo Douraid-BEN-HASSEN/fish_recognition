@@ -1,77 +1,77 @@
 # Fish Individual Recognition using Computer Vision & Deep Learning
 
-<img src="images/predict_result.gif" alt="Exemple de détection"/>
+<img src="images/predict_result.gif" alt="Detection example"/>
 
-Ce projet vise à résoudre un défi complexe : **reconnaître individuellement des poissons quasiment identiques** (taille, couleur, forme) dans un aquarium en mouvement, en combinant computer vision et deep learning.
+This project tackles a complex challenge: **individually recognizing nearly identical fish** (size, color, shape) in a moving aquarium by combining computer vision and deep learning.
 
-## 🛠️ Architecture de la Solution
+## 🛠️ Solution Architecture
 
-1. **Génération de dataset synthétique** avec Unity pour l'annotation rapide
-2. **Détection et pose estimation** avec YOLO
-3. **Transformation des keypoints en masques** (profil/face)
-4. **Classification individuelle** basée sur les morphologies subtiles
+1. **Synthetic dataset generation** with Unity for fast annotation
+2. **Detection and pose estimation** with YOLO
+3. **Keypoint-to-mask transformation** (profile/face)
+4. **Individual classification** based on subtle morphology
 
 ## 📦 Dataset
 
-- **Annotations** : 23 keypoints anatomiques par poisson
-- **Outils** : Génération procédurale sous Unity → *<b>YOLOPoseExporter.cs<b>*
-- **Exemples d'annotation** :
+- **Annotations**: 23 anatomical keypoints per fish
+- **Tools**: Procedural generation in Unity → **YOLOPoseExporter.cs**
+- **Annotation examples**:
 
 <img src="images/pose_annotation_1.jpg" alt="pose_annotation_1" width="50%"/><img src="images/pose_annotation_2.jpg" alt="pose_annotation_2" width="50%"/>
 <img src="images/pose_annotation_3.jpg" alt="pose_annotation_3" width="50%"/><img src="images/pose_annotation_4.jpg" alt="pose_annotation_4" width="50%"/>
 
-## 🧠 Modèle YOLO pour Pose Estimation
+## 🧠 YOLO Model for Pose Estimation
 
 ### Configuration
-- **Modèle** : YOLO11-pose (yolo11s-pose)
-- **Keypoints** : 23 points anatomiques
+- **Model**: YOLO11-pose (yolo11s-pose)
+- **Keypoints**: 23 anatomical points
 
     <img src="images/keypoints_name.png" alt="Keypoints name" width="25%"/>
 
-- **Entrée** : 640x640 pixels
+- **Input**: 640x640 pixels
 
-### Courbes d'apprentissage (400 epochs)
+### Learning curves (400 epochs)
 <img src="images/pose_metrics.png" alt="Pose metrics"/>
 
 ### Pose predictions
 <img src="images/pose_predictions.gif" alt="Pose predictions"/>
 
-## ✨ Normalisation des Keypoints → Masques
+## ✨ Keypoint Normalization → Masks
 
-Méthode convertissant les keypoints en masques pour capturer les subtilités morphologiques:
+Method that converts keypoints into masks to capture subtle morphological differences:
 
-1. Alignement des points clés :
+1. Keypoint alignment:
     - Profile → mouth - caudalStart
     - Face → leftEye - rightEye
-2. Génération de silhouette
-3. Normalisation perspective (longeur du poisson)
+2. Silhouette generation
+3. Perspective normalization (fish length)
 
-**Exemples de transformation** :
-| Keypoints | Masque | Type de masque |
+**Transformation examples**:
+| Keypoints | Mask | Mask type |
 |-----------|---------------|------------|
-| <img src="images/keypoints_1.png" alt="keypoints_1"/> | <img src="images/mask_keypoints_1.png" alt="mask_keypoints_1" width="50%"/> | Profil |
-| <img src="images/keypoints_2.png" alt="keypoints_2"/> | <img src="images/mask_keypoints_2.png" alt="mask_keypoints_2" width="50%"/> | Profil |
+| <img src="images/keypoints_1.png" alt="keypoints_1"/> | <img src="images/mask_keypoints_1.png" alt="mask_keypoints_1" width="50%"/> | Profile |
+| <img src="images/keypoints_2.png" alt="keypoints_2"/> | <img src="images/mask_keypoints_2.png" alt="mask_keypoints_2" width="50%"/> | Profile |
 | <img src="images/keypoints_3.png" alt="keypoints_3"/> | <img src="images/mask_keypoints_3.png" alt="mask_keypoints_3" width="50%"/> | Face |
 | <img src="images/keypoints_4.png" alt="keypoints_4"/> | <img src="images/mask_keypoints_4.png" alt="mask_keypoints_4" width="50%"/> | Face |
 
 
-## 🎯 Classification Individuelle
+## 🎯 Individual Classification
 
-### Architecture :
+### Architecture:
 
-Paramètres Globaux
-| Paramètre | Valeur |
+Global Parameters
+| Parameter | Value |
 |-----------|---------------|
 | Input Shape | (46,) |
-| Nombre de Classes | 3 (3 poissons) |
-| Optimiseur | Adam avec Cyclical Learning Rate |
-| Taux d'apprentissage initial | 0.001 |
+| Number of Classes | 3 (3 fish) |
+| Optimizer | Adam with Cyclical Learning Rate |
+| Initial learning rate | 0.001 |
 | Beta1 | 0.9 |
 | Beta2 | 0.999 |
 | Epsilon | 1e-7 |
-| Fonction de Loss | sparse_categorical_crossentropy |
+| Loss Function | sparse_categorical_crossentropy |
 
-Schéma de l'Architecture
+Architecture Diagram
 ```
 InputLayer(shape=(46,))
 │
@@ -79,82 +79,82 @@ InputLayer(shape=(46,))
 ├─ BatchNormalization()
 ├─ Dropout(0.2)
 │
-├─ [Bloc Résiduel 1]
+├─ [Residual Block 1]
 │   ├─ Dense(256, activation='relu', L2=1e-5) → BatchNorm → Dropout(0.3)
 │   ├─ Dense(256, activation='relu', L2=1e-5) → BatchNorm
-│   └─ Add() + Dropout(0.3)  # Connexion résiduelle
+│   └─ Add() + Dropout(0.3)  # Residual connection
 │
 ├─ Dense(128, activation='relu', L2=1e-5) → BatchNorm → Dropout(0.35)
 │
-├─ [Bloc Résiduel 2]
+├─ [Residual Block 2]
 │   ├─ Dense(128, activation='relu', L2=1e-5) → BatchNorm → Dropout(0.35)
 │   ├─ Dense(128, activation='relu', L2=1e-5) → BatchNorm
-│   └─ Add() + Dropout(0.35)  # Connexion résiduelle
+│   └─ Add() + Dropout(0.35)  # Residual connection
 │
 ├─ Dense(64, activation='relu', L2=1e-5) → BatchNorm → Dropout(0.4)
 │
-├─ [Tête de Classification]
+├─ [Classification Head]
 │   ├─ Dense(32, activation='relu') → BatchNorm → Dropout(0.5)
 │   └─ Dense(num_classes, activation='softmax')
 │
 Model: "Functional"
 ```
 
-Caractéristiques Clés
-1. Connexions Résiduelles
+Key Features
+1. Residual Connections
 
-    - Deux blocs résiduels pour éviter le vanishing gradient.
+    - Two residual blocks to avoid vanishing gradients.
 
-    - Utilisation de Add() pour fusionner les entrées/sorties.
+    - Uses Add() to merge inputs/outputs.
 
-2. Régularisation
+2. Regularization
 
-    - Dropout progressif (de 0.2 à 0.5).
+    - Progressive dropout (from 0.2 to 0.5).
 
-    - L2 Regularization (1e-5) sur les couches denses.
+    - L2 regularization (1e-5) on dense layers.
 
-    - Batch Normalization après chaque couche dense.
+    - Batch normalization after each dense layer.
 
-3. Optimisation
+3. Optimization
 
-    - Adam avec des paramètres classiques (beta1, beta2).
+    - Adam with standard parameters (beta1, beta2).
 
-    - Préparation pour un Cyclical Learning Rate (à implémenter via un callback).
+    - Prepared for Cyclical Learning Rate (to be implemented via callback).
 
 ### Face model
-- **Metrics** :
+- **Metrics**:
 
-<img src="images/face_trainingsetstats2.png" alt="Trainning metrics Face"/>
+<img src="images/face_trainingsetstats2.png" alt="Training metrics Face"/>
 
-- **Courbes d'apprentissage (436 epochs)** :
+- **Learning curves (436 epochs)**:
 
-<img src="images/face_classifier_training_metrics.png" alt="Matrice de confusion Face"/>
+<img src="images/face_classifier_training_metrics.png" alt="Confusion matrix Face"/>
 
-- **Matrice de confusion** :
+- **Confusion matrix**:
 
-<img src="images/face_trainingset.png" alt="Matrice de confusion Face"/>
-<img src="images/face_trainingsetstats.png" alt="Trainning metrics Face"/>
+<img src="images/face_trainingset.png" alt="Confusion matrix Face"/>
+<img src="images/face_trainingsetstats.png" alt="Training metrics Face"/>
 
 ### Profile model
-- **Metrics** :
+- **Metrics**:
 
-<img src="images/profile_trainingsetstats2.png" alt="Trainning metrics Profile"/>
+<img src="images/profile_trainingsetstats2.png" alt="Training metrics Profile"/>
 
-- **Courbes d'apprentissage (150 epochs)** :
+- **Learning curves (150 epochs)**:
 
-<img src="images/profile_classifier_training_metrics.png" alt="Matrice de confusion Face"/>
+<img src="images/profile_classifier_training_metrics.png" alt="Confusion matrix Face"/>
 
-- **Matrice de confusion** :
+- **Confusion matrix**:
 
-<img src="images/profile_trainingset.png" alt="Matrice de confusion Profile"/>
-<img src="images/profile_trainingsetstats.png" alt="Trainning metrics Profile"/>
+<img src="images/profile_trainingset.png" alt="Confusion matrix Profile"/>
+<img src="images/profile_trainingsetstats.png" alt="Training metrics Profile"/>
 
 
-## 🚀 Utilisation
+## 🚀 Usage
 
 ```bash
 # Installation
 pip install -r requirements.txt
 
-# Inférence
+# Inference
 python predict.py
